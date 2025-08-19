@@ -14,6 +14,8 @@ Use the script with PowerShell (Terminal)
 
 ## Features
 
+![App Screenshot](https://raw.githubusercontent.com/installoffice/setup/refs/heads/main/files/install_office.png)
+
 - Supports the installation of all Microsoft Office editions (Office 2013 and later).
 - Supports downloading and installing both 32-bit and 64-bit versions of Office.
 - Allows downloading Microsoft Office for installation on other computers.
