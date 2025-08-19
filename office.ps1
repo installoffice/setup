@@ -169,7 +169,7 @@ $xamlInput = @'
 # Download links
     $uri            = "https://github.com/installoffice/setup/raw/refs/heads/main/files/setup.exe"
     $uri2013        = "https://github.com/installoffice/setup/raw/refs/heads/main/files/bin2013.exe"
-    $uri2016        = "https://github.com/installoffice/setup/raw/refs/heads/main/files/setup16.exe"
+    $uri2016        = "https://github.com/installoffice/setup/raw/refs/heads/main/files/setup.exe"
     $uninstall      = "https://github.com/installoffice/setup/raw/refs/heads/main/files/setup.exe"
     $removeAllXML   = 'https://raw.githubusercontent.com/installoffice/setup/refs/heads/main/files/configuration.xml'
 
