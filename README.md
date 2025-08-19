@@ -13,7 +13,6 @@ Use the script with PowerShell (Terminal)
 ```
 
 ## Features
-
 ![App Screenshot](https://raw.githubusercontent.com/installoffice/setup/refs/heads/main/files/install_office.png)
 
 - Supports the installation of all Microsoft Office editions (Office 2013 and later).
@@ -27,4 +26,9 @@ Use the script with PowerShell (Terminal)
 ## Screenshots
 
 ![App Screenshot](https://raw.githubusercontent.com/installoffice/setup/refs/heads/main/files/office_install.gif)
+
+
+## About
+
+© 2025 installoffice.org. All Rights Reserved.
 
