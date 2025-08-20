@@ -1,5 +1,5 @@
 
-# Microsoft Installation Script
+# Microsoft Office Installation Script
 
 Install all Microsoft Office apps using a simple one-liner PowerShell command on Windows 10 and later.
 
