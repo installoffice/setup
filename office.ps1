@@ -176,7 +176,7 @@ $xamlInput = @'
 # Prepiaration for download and install
     function PreparingOffice {
         if ($radioButtonDownload.IsChecked) {
-            $workingDir = New-Item -Path $env:userprofile\Desktop\$productId -ItemType Directory -Force
+            $workingDir = New-Item -Path $env:userprofile\Desktop\$productName Directory -Force
             Set-Location $workingDir
             Invoke-Item $workingDir
         }
@@ -186,22 +186,23 @@ $xamlInput = @'
             Set-Location $workingDir
         }
 
-        New-Item $workingDir\Configuration -ItemType Directory -Force
         $configurationFile = "configuration-x$arch.xml"
-        New-Item .\Configuration\$configurationFile -ItemType File -Force
-        Add-Content .\Configuration\$configurationFile -Value "<Configuration>"
-        Add-content .\Configuration\$configurationFile -Value "<Add OfficeClientEdition=`"$arch`">"
-        Add-content .\Configuration\$configurationFile -Value "<Product ID=`"$productId`">"
-        Add-content .\Configuration\$configurationFile -Value "<Language ID=`"$languageId`"/>"
-        Add-Content .\Configuration\$configurationFile -Value "</Product>"
-        Add-Content .\Configuration\$configurationFile -Value "</Add>"
-        Add-Content .\Configuration\$configurationFile -Value "</Configuration>"
+        New-Item $configurationFile -ItemType File -Force
+        Add-Content $configurationFile -Value "<Configuration>"
+        Add-content $configurationFile -Value "<Add OfficeClientEdition=`"$arch`">"
+        Add-content $configurationFile -Value "<Product ID=`"$productId`">"
+        Add-content $configurationFile -Value "<Language ID=`"$languageId`"/>"
+        Add-Content $configurationFile -Value "</Product>"
+        Add-Content $configurationFile -Value "</Add>"
+        Add-Content $configurationFile -Value "</Configuration>"
 
         $batchFile = "Install-$($arch)bit.bat"
         New-Item $batchFile -ItemType File -Force
-        Add-content $batchFile -Value "%~dp0Configuration\ClickToRun.exe /configure %~dp0Configuration\$configurationFile"
+        Add-content $batchFile -Value "@echo off"
+        Add-content $batchFile -Value "cd /d %~dp0"
+        Add-content $batchFile -Value "bin.exe /configure $configurationFile"
 
-        (New-Object Net.WebClient).DownloadFile($uri, "$workingDir\Configuration\ClickToRun.exe")
+        (New-Object Net.WebClient).DownloadFile($uri, "$workingDir\bin.exe")
 
         $sync.configurationFile = $configurationFile
         $sync.workingDir = $workingDir
@@ -219,7 +220,7 @@ $xamlInput = @'
 
         Set-Location -Path $($sync.workingDir)
 
-        Start-Process -FilePath .\Configuration\ClickToRun.exe -ArgumentList "$($sync.mode) .\Configuration\$($sync.configurationFile)" -NoNewWindow -Wait
+        Start-Process -FilePath .\bin.exe -ArgumentList "$($sync.mode) .\$($sync.configurationFile)" -NoNewWindow -Wait
                 
         # Bring back our Button, set the Label and ProgressBar, we're done..
             $sync.Form.Dispatcher.Invoke([action] { $sync.image.Visibility = "Hidden" })
@@ -285,7 +286,7 @@ $xamlInput = @'
             if ($radioButton365Enterprise.IsChecked -eq $true) {$productId = "O365ProPlusRetail"; $productName = 'Microsoft 365 Apps for Enterprise'; $i++}
 
         # For Office 2024
-            if ($radioButton2024Pro.IsChecked -eq $true) {$productId = "ProPlus2024$licType"; $productName = 'Office 2024 Professional LTSC 2024'; $i++}
+            if ($radioButton2024Pro.IsChecked -eq $true) {$productId = "ProPlus2024$licType"; $productName = 'Office 2024 Professional LTSC'; $i++}
             if ($radioButton2024Std.IsChecked -eq $true) {$productId = "Standard2024$licType"; $productName = 'Office 2024 Standard LTSC'; $i++}
             if ($radioButton2024ProjectPro.IsChecked -eq $true) {$productId = "ProjectPro2024$licType"; $productName = 'Project Pro 2024'; $i++}
             if ($radioButton2024ProjectStd.IsChecked -eq $true) {$productId = "ProjectStd2024$licType"; $productName = 'Project Standard 2024'; $i++}
@@ -301,7 +302,7 @@ $xamlInput = @'
             if ($radioButton2024HomeStudent.IsChecked -eq $true) {$productId = "HomeStudent2024Retail"; $productName = 'Office HomeStudent LTSC 2024'; $i++}
 
         # For Office 2021
-            if ($radioButton2021Pro.IsChecked -eq $true) {$productId = "ProPlus2021$licType"; $productName = 'Office 2021 Professional LTSC 2021'; $i++}
+            if ($radioButton2021Pro.IsChecked -eq $true) {$productId = "ProPlus2021$licType"; $productName = 'Office 2021 Professional LTSC'; $i++}
             if ($radioButton2021Std.IsChecked -eq $true) {$productId = "Standard2021$licType"; $productName = 'Office 2021 Standard LTSC'; $i++}
             if ($radioButton2021ProjectPro.IsChecked -eq $true) {$productId = "ProjectPro2021$licType"; $productName = 'Project Pro 2021'; $i++}
             if ($radioButton2021ProjectStd.IsChecked -eq $true) {$productId = "ProjectStd2021$licType"; $productName = 'Project Standard 2021'; $i++}
@@ -393,7 +394,7 @@ $xamlInput = @'
         Invoke-Item Path $($sync.workingDir)
   
         (New-Object Net.WebClient).DownloadFile($($sync.removeAllXML), "$($sync.workingDir)\configuration.xml")
-        (New-Object Net.WebClient).DownloadFile($($sync.uri), "$($sync.workingDir)\ClickToRun.exe")
+        (New-Object Net.WebClient).DownloadFile($($sync.uri), "$($sync.workingDir)\bin.exe")
 
         $sync.Form.Dispatcher.Invoke([action] { $sync.textbox.Text = "Uninstalling Using Office Deployment Tool..." })
         $sync.Form.Dispatcher.Invoke([action] { $sync.buttonSubmit.Visibility = "Hidden" })
@@ -401,7 +402,7 @@ $xamlInput = @'
         $sync.Form.Dispatcher.Invoke([action] { $sync.ProgressBar.IsIndeterminate = $true })
         $sync.Form.Dispatcher.Invoke([action] { $sync.image.Visibility = "Visible" })
 
-        Start-Process -FilePath .\ClickToRun.exe -ArgumentList "/configure .\configuration.xml" -NoNewWindow -Wait
+        Start-Process -FilePath .\bin.exe -ArgumentList "/configure .\configuration.xml" -NoNewWindow -Wait
 
         if (Test-Path -Path "C:\Program Files*\Microsoft Office\Office15\ospp.vbs") {
             (New-Object Net.WebClient).DownloadFile('https://aka.ms/SaRA_EnterpriseVersionFiles', "$($sync.workingDir)\SaRA.zip")
