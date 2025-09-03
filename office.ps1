@@ -176,7 +176,7 @@ $xamlInput = @'
 # Prepiaration for download and install
     function PreparingOffice {
         if ($radioButtonDownload.IsChecked) {
-            $workingDir = New-Item -Path $env:userprofile\Desktop\$productName Directory -Force
+            $workingDir = New-Item -Path $env:userprofile\Desktop\$productName -ItemType Directory -Force
             Set-Location $workingDir
             Invoke-Item $workingDir
         }
